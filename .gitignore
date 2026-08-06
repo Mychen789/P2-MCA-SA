@@ -1,0 +1,31 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+.env
+.env.*
+.vscode/
+.idea/
+
+# Local datasets, weights, and generated experiment artifacts
+datasets/
+weights/
+runs/
+*.pt
+*.pth
+*.onnx
+*.engine
+events.out.tfevents.*
+
+# Local manuscript and office artifacts
+paper_drafts/
+*.docx
+*.pdf
+~$*
+
+.DS_Store
+Thumbs.db
+

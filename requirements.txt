@@ -1,0 +1,16 @@
+ultralytics==8.4.37
+# torch: install separately with the correct CUDA wheel before this file.
+# RTX 50xx (Blackwell): pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+# RTX 30xx/40xx:        pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+torch>=2.7  # >=2.7 required for sm_120 (Blackwell / RTX 5060)
+matplotlib
+numpy
+pandas
+Pillow
+PyYAML
+scipy
+seaborn
+thop
+opencv-python
+sahi>=0.11.36
+pycocotools

@@ -1,0 +1,10 @@
+path: datasets/nmv_visdrone_3cls
+train: images/train
+val: images/val
+test: images/test
+
+nc: 3
+names:
+  0: ebike
+  1: bicycle
+  2: etrike

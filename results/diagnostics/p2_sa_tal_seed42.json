@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "updated_utc": "2026-07-23T07:44:38.668653+00:00",
+  "settings": {
+    "scale_assign_enabled": true,
+    "hi_ratio": 32.0,
+    "lo_ratio": 0.0,
+    "size_definition": "COCO area bins in the current training-input pixel coordinates: small < 32^2, medium < 96^2, large >= 96^2",
+    "training_grad_context_only": true,
+    "matrix_columns": [
+      "stride_4",
+      "stride_8",
+      "stride_16",
+      "stride_32"
+    ]
+  },
+  "assignment_calls": 1139,
+  "gt_occurrences": {
+    "small": 67137,
+    "medium": 7008,
+    "large": 114
+  },
+  "fallback_gt": 0,
+  "counts": {
+    "candidate_before_sa": {
+      "small": {
+        "stride_4": 1002539.0,
+        "stride_8": 251434.0,
+        "stride_16": 62845.0,
+        "stride_32": 15576.0
+      },
+      "medium": {
+        "stride_4": 933059.0,
+        "stride_8": 232442.0,
+        "stride_16": 58157.0,
+        "stride_32": 14585.0
+      },
+      "large": {
+        "stride_4": 95084.0,
+        "stride_8": 23890.0,
+        "stride_16": 6028.0,
+        "stride_32": 1477.0
+      }
+    },
+    "candidate_after_sa": {
+      "small": {
+        "stride_4": 1002539.0,
+        "stride_8": 251434.0,
+        "stride_16": 62845.0,
+        "stride_32": 15576.0
+      },
+      "medium": {
+        "stride_4": 924477.0,
+        "stride_8": 232442.0,
+        "stride_16": 58157.0,
+        "stride_32": 14585.0
+      },
+      "large": {
+        "stride_4": 32809.0,
+        "stride_8": 23890.0,
+        "stride_16": 6028.0,
+        "stride_32": 1477.0
+      }
+    },
+    "positive_after_topk": {
+      "small": {
+        "stride_4": 487035.0,
+        "stride_8": 37947.0,
+        "stride_16": 4842.0,
+        "stride_32": 340.0
+      },
+      "medium": {
+        "stride_4": 66046.0,
+        "stride_8": 4034.0,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 12.0,
+        "stride_8": 1128.0,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      }
+    }
+  },
+  "derived": {
+    "positive_per_gt": {
+      "small": {
+        "stride_4": 7.254345591849502,
+        "stride_8": 0.5652173913043478,
+        "stride_16": 0.07212118503954601,
+        "stride_32": 0.005064271564115167
+      },
+      "medium": {
+        "stride_4": 9.42437214611872,
+        "stride_8": 0.5756278538812786,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 0.10526315789473684,
+        "stride_8": 9.894736842105264,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      }
+    },
+    "positive_level_fraction": {
+      "small": {
+        "stride_4": 0.918649700847285,
+        "stride_8": 0.0715759651730408,
+        "stride_16": 0.009133022989112803,
+        "stride_32": 0.0006413109905614112
+      },
+      "medium": {
+        "stride_4": 0.9424372146118721,
+        "stride_8": 0.057562785388127855,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 0.010526315789473684,
+        "stride_8": 0.9894736842105263,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      }
+    },
+    "mean_alignment_score_of_positives": {
+      "small": {
+        "stride_4": 0.13046069921745168,
+        "stride_8": 2.439224754744441e-05,
+        "stride_16": 6.95235401650026e-22,
+        "stride_32": 1.8729823585654597e-26
+      },
+      "medium": {
+        "stride_4": 0.2725660428817689,
+        "stride_8": 0.11208020656540008,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 0.11198679606119792,
+        "stride_8": 0.19282700998563293,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      }
+    },
+    "mean_iou_of_positives": {
+      "small": {
+        "stride_4": 0.703149949804886,
+        "stride_8": 0.06009482703454083,
+        "stride_16": 0.001119699987093543,
+        "stride_32": 0.00021447785440935097
+      },
+      "medium": {
+        "stride_4": 0.8268333280613199,
+        "stride_8": 0.7325470878986894,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 0.6719970703125,
+        "stride_8": 0.8048710383421985,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      }
+    }
+  }
+}

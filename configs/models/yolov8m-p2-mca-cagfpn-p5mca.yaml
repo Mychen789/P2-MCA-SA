@@ -1,0 +1,58 @@
+# E15: E14 (MCA-isolated) + symmetric MCA on P5 head.
+# Reviewer-defense ablation for the R2 attack "why not just add MCA to P5 too?".
+# Hypothesis: adding MCA on P5 will *further* degrade AP_large because MCA's
+# multi-scale fine-grained attention is fundamentally small-object-oriented;
+# applied to the P5 large-object semantic head it will over-suppress
+# off-center activations needed for large-object boundary regression.
+#
+# Architectural diff vs E14 (yolov8m-p2-mca-cagfpn-isolated.yaml):
+#   - Row 31: insert MCA on P5 C2f output (channel 1024 pre-scale)
+#   - Row 32: Detect now sources from [19, 23, 27, 31] (was 30)
+nc: 3
+scales:
+  m: [0.67, 0.75, 768]
+
+backbone:
+  - [-1, 1, Conv, [64, 3, 2]]        # 0-P1/2
+  - [-1, 1, Conv, [128, 3, 2]]       # 1-P2/4
+  - [-1, 3, C2f, [128, True]]        # 2
+  - [-1, 1, Conv, [256, 3, 2]]       # 3-P3/8
+  - [-1, 6, C2f, [256, True]]        # 4
+  - [-1, 1, Conv, [512, 3, 2]]       # 5-P4/16
+  - [-1, 6, C2f, [512, True]]        # 6
+  - [-1, 1, Conv, [1024, 3, 2]]      # 7-P5/32
+  - [-1, 3, C2f, [1024, True]]       # 8
+  - [-1, 1, SPPF, [1024, 5]]         # 9
+
+head:
+  # === TD (top-down) path ===
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]   # 10
+  - [[-1, 6], 1, Concat, [1]]                     # 11
+  - [-1, 3, C2f, [512]]                           # 12  P4 TD
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]   # 13
+  - [[-1, 4], 1, Concat, [1]]                     # 14
+  - [-1, 3, C2f, [256]]                           # 15  P3 TD
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]   # 16
+  - [[-1, 2], 1, Concat, [1]]                     # 17
+  - [-1, 3, C2f, [128]]                           # 18  P2 C2f (pre-MCA, BU source)
+  - [-1, 1, MCA, [128, 4]]                        # 19  MCA on P2 → Detect
+
+  # === BU path (sources from pre-MCA P2 = MCA-L from E14) ===
+  - [18, 1, Conv, [128, 3, 2]]                    # 20  pre-MCA P2 → P3
+  - [4, 1, ASPPLite, [256]]                       # 21
+  - [[20, 15, 21], 1, Concat, [1]]                # 22
+  - [-1, 3, C2f, [256]]                           # 23  P3 BU
+
+  - [-1, 1, Conv, [256, 3, 2]]                    # 24
+  - [6, 1, ASPPLite, [512]]                       # 25
+  - [[24, 12, 25], 1, Concat, [1]]                # 26
+  - [-1, 3, C2f, [512]]                           # 27  P4 BU
+
+  - [-1, 1, Conv, [512, 3, 2]]                    # 28
+  - [[-1, 9], 1, Concat, [1]]                     # 29
+  - [-1, 3, C2f, [1024]]                          # 30  P5 C2f
+  - [-1, 1, MCA, [1024, 4]]                       # 31  ★ symmetric MCA on P5
+
+  - [[19, 23, 27, 31], 1, Detect, [nc]]           # 32  Detect from MCA P2 + P3/P4 BU + MCA P5

@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "updated_utc": "2026-07-23T07:34:21.997271+00:00",
+  "settings": {
+    "scale_assign_enabled": false,
+    "hi_ratio": 32.0,
+    "lo_ratio": 0.0,
+    "size_definition": "COCO area bins in the current training-input pixel coordinates: small < 32^2, medium < 96^2, large >= 96^2",
+    "training_grad_context_only": true,
+    "matrix_columns": [
+      "stride_4",
+      "stride_8",
+      "stride_16",
+      "stride_32"
+    ]
+  },
+  "assignment_calls": 1139,
+  "gt_occurrences": {
+    "small": 67137,
+    "medium": 7008,
+    "large": 114
+  },
+  "fallback_gt": 0,
+  "counts": {
+    "candidate_before_sa": {
+      "small": {
+        "stride_4": 1002538.0,
+        "stride_8": 251434.0,
+        "stride_16": 62845.0,
+        "stride_32": 15576.0
+      },
+      "medium": {
+        "stride_4": 933060.0,
+        "stride_8": 232442.0,
+        "stride_16": 58157.0,
+        "stride_32": 14585.0
+      },
+      "large": {
+        "stride_4": 95084.0,
+        "stride_8": 23890.0,
+        "stride_16": 6028.0,
+        "stride_32": 1477.0
+      }
+    },
+    "candidate_after_sa": {
+      "small": {
+        "stride_4": 1002538.0,
+        "stride_8": 251434.0,
+        "stride_16": 62845.0,
+        "stride_32": 15576.0
+      },
+      "medium": {
+        "stride_4": 933060.0,
+        "stride_8": 232442.0,
+        "stride_16": 58157.0,
+        "stride_32": 14585.0
+      },
+      "large": {
+        "stride_4": 95084.0,
+        "stride_8": 23890.0,
+        "stride_16": 6028.0,
+        "stride_32": 1477.0
+      }
+    },
+    "positive_after_topk": {
+      "small": {
+        "stride_4": 486356.0,
+        "stride_8": 38979.0,
+        "stride_16": 4892.0,
+        "stride_32": 345.0
+      },
+      "medium": {
+        "stride_4": 65318.0,
+        "stride_8": 4762.0,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 10.0,
+        "stride_8": 1116.0,
+        "stride_16": 14.0,
+        "stride_32": 0.0
+      }
+    }
+  },
+  "derived": {
+    "positive_per_gt": {
+      "small": {
+        "stride_4": 7.244231943637637,
+        "stride_8": 0.5805889449930739,
+        "stride_16": 0.07286593085779823,
+        "stride_32": 0.0051387461459403904
+      },
+      "medium": {
+        "stride_4": 9.320490867579908,
+        "stride_8": 0.6795091324200914,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 0.08771929824561403,
+        "stride_8": 9.789473684210526,
+        "stride_16": 0.12280701754385964,
+        "stride_32": 0.0
+      }
+    },
+    "positive_level_fraction": {
+      "small": {
+        "stride_4": 0.9166635254027728,
+        "stride_8": 0.07346599519009672,
+        "stride_16": 0.009220237781111706,
+        "stride_32": 0.0006502416260187119
+      },
+      "medium": {
+        "stride_4": 0.9320490867579909,
+        "stride_8": 0.06795091324200914,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 0.008771929824561403,
+        "stride_8": 0.9789473684210527,
+        "stride_16": 0.012280701754385965,
+        "stride_32": 0.0
+      }
+    },
+    "mean_alignment_score_of_positives": {
+      "small": {
+        "stride_4": 0.10171569627380132,
+        "stride_8": 4.1911821645045186e-05,
+        "stride_16": 6.268306349063997e-23,
+        "stride_32": 2.632495941044133e-37
+      },
+      "medium": {
+        "stride_4": 0.21522763432242098,
+        "stride_8": 0.0635320928255984,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 0.0550048828125,
+        "stride_8": 0.1096403267648485,
+        "stride_16": 7.605978420802526e-05,
+        "stride_32": 0.0
+      }
+    },
+    "mean_iou_of_positives": {
+      "small": {
+        "stride_4": 0.6817420820361654,
+        "stride_8": 0.09317180168977644,
+        "stride_16": 0.0009833212952546086,
+        "stride_32": 0.0002055132465497793
+      },
+      "medium": {
+        "stride_4": 0.801429163610626,
+        "stride_8": 0.7034735233029714,
+        "stride_16": 0.0,
+        "stride_32": 0.0
+      },
+      "large": {
+        "stride_4": 0.73173828125,
+        "stride_8": 0.7573382196460573,
+        "stride_16": 0.4839564732142857,
+        "stride_32": 0.0
+      }
+    }
+  }
+}

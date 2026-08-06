@@ -1,0 +1,33 @@
+# VisDrone-full cross-dataset evaluation set, mapped to NMV-SOD-3cls class ids.
+#
+# Purpose: zero-shot evaluation of NMV-trained models on the broader VisDrone
+# scene (images NOT in NMV-SOD-3cls train/val/test) - tests whether the model
+# generalises to scenes that also contain non-target classes (car, pedestrian,
+# truck, etc.). Per the paper's §5.7 cross-dataset generalisation.
+#
+# Class mapping (VisDrone -> NMV-SOD-3cls):
+#   VisDrone 'bicycle'  -> 1 (bicycle)
+#   VisDrone 'motor'    -> 0 (ebike, approximate)  [motorcycle is closest to ebike geometry]
+#   VisDrone 'tricycle' -> 2 (etrike)
+#   VisDrone 'awning-tricycle' -> 2 (etrike, approximate)
+#   All other VisDrone classes -> dropped (ignored by the converter)
+#
+# BUILT 2026-06-10 (scripts/build_visdrone_full_nmv3.py, motor 映射 bug 已修 10->0):
+#   composition = VisDrone train 中未进 NMV 的 1916 张 + VisDrone val 中未进 NMV 的 48 张
+#               = 1964 held-out images, 603 NMV-class boxes (大量零目标负样本图, 测 FP 率)。
+#   exclusion list: D:/nmv_visdrone_3cls/nmv_all_stems.txt (5056 stems, train/val/test 全排除)。
+#   论文表述: 同源 held-out 分布鲁棒性评估 (非真·独立跨域), §6 注明局限。
+# Eval:
+#   python scripts/eval_cross_dataset.py --run E16_mca_scale_assign_hi32_1280 \
+#       --data configs/data/visdrone_full_nmv3.yaml --name visdrone_full
+
+path: datasets/visdrone_full_nmv3
+train: images/train          # not used for eval, kept for compatibility
+val: images/val
+test: images/val             # zero-shot eval uses val; no test split needed
+
+nc: 3
+names:
+  0: ebike
+  1: bicycle
+  2: etrike

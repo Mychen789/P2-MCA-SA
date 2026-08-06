@@ -1,0 +1,58 @@
+# YOLOv11m + P2 detection head + MCA on P2 features.
+# 迁移实验 (E24): 把本工作创新 (P2 高分辨率头 + MCA) 移植到 YOLOv11m 骨干上,
+# 与 E18 YOLOv11m baseline 在同一起跑线对比, 验证创新对最新骨干是否仍有正交增益.
+# 尺度感知标签分配 (scale-aware assign, HI_RATIO=32) 通过环境变量 NMV_SCALE_ASSIGN 触发,
+# 不在 yaml 内 (见 scripts/train.py 的 E24 entry env).
+#
+# backbone: 原样照抄 ultralytics yolo11.yaml 的 0-10 层 (C3k2 + 末尾 C2PSA),
+#           保证 .load(yolo11m.pt) 能按层名匹配加载 COCO 预训练的 backbone 权重.
+# head:     仿 yolov8m-p2-mca.yaml 的 4-scale PAN (TD 到 P2 + MCA, BU 回 P5),
+#           但 C2f -> C3k2, P5 拼接源用 C2PSA(idx10) 而非 SPPF.
+nc: 3
+scales:
+  # [depth, width, max_channels] — 仅保留 m (YOLOv11m), 与 E18 baseline 同规模
+  m: [0.50, 1.00, 512]
+
+# YOLO11m backbone (照抄官方 yolo11.yaml backbone)
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, Conv, [64, 3, 2]]          # 0-P1/2
+  - [-1, 1, Conv, [128, 3, 2]]         # 1-P2/4
+  - [-1, 2, C3k2, [256, False, 0.25]]  # 2   <- P2/4 特征 (P2 头 concat 源)
+  - [-1, 1, Conv, [256, 3, 2]]         # 3-P3/8
+  - [-1, 2, C3k2, [512, False, 0.25]]  # 4   <- P3/8 特征 (concat 源)
+  - [-1, 1, Conv, [512, 3, 2]]         # 5-P4/16
+  - [-1, 2, C3k2, [512, True]]         # 6   <- P4/16 特征 (concat 源)
+  - [-1, 1, Conv, [1024, 3, 2]]        # 7-P5/32
+  - [-1, 2, C3k2, [1024, True]]        # 8
+  - [-1, 1, SPPF, [1024, 5]]           # 9
+  - [-1, 2, C2PSA, [1024]]             # 10  <- P5 特征 (P5 头 concat 源)
+
+# 4-scale P2 head (P2/4, P3/8, P4/16, P5/32), C3k2 块, MCA 加在 P2 检测特征上
+head:
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]   # 11
+  - [[-1, 6], 1, Concat, [1]]                     # 12  cat backbone P4 (idx6)
+  - [-1, 2, C3k2, [512, False]]                   # 13  TD-P4
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]   # 14
+  - [[-1, 4], 1, Concat, [1]]                     # 15  cat backbone P3 (idx4)
+  - [-1, 2, C3k2, [256, False]]                   # 16  TD-P3
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]   # 17
+  - [[-1, 2], 1, Concat, [1]]                     # 18  cat backbone P2 (idx2)
+  - [-1, 2, C3k2, [128, False]]                   # 19  TD-P2/4 (xsmall)
+  - [-1, 1, MCA, [128, 4]]                        # 20  MCA on P2 features (本工作创新)
+
+  - [-1, 1, Conv, [128, 3, 2]]                    # 21
+  - [[-1, 16], 1, Concat, [1]]                    # 22  cat head P3 (TD idx16)
+  - [-1, 2, C3k2, [256, False]]                   # 23  BU-P3/8-small
+
+  - [-1, 1, Conv, [256, 3, 2]]                    # 24
+  - [[-1, 13], 1, Concat, [1]]                    # 25  cat head P4 (TD idx13)
+  - [-1, 2, C3k2, [512, False]]                   # 26  BU-P4/16-medium
+
+  - [-1, 1, Conv, [512, 3, 2]]                    # 27
+  - [[-1, 10], 1, Concat, [1]]                    # 28  cat backbone P5 (C2PSA idx10)
+  - [-1, 2, C3k2, [1024, True]]                   # 29  BU-P5/32-large
+
+  - [[20, 23, 26, 29], 1, Detect, [nc]]           # 30  Detect(P2-MCA, P3, P4, P5)
