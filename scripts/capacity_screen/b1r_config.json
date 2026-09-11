@@ -1,0 +1,43 @@
+{
+  "schema": "B1R_PAPER_EXPERIMENT_CONFIG_V1",
+  "experiment": "A1_CAPACITY_2X2_FACTORIAL_SCREEN",
+  "cell_order": ["C10", "C11", "C01", "C00"],
+  "train": {
+    "seed": 42,
+    "imgsz": 768,
+    "batch": 2,
+    "epochs": 150,
+    "optimizer": "SGD",
+    "lr0": 0.01,
+    "lrf": 0.01,
+    "momentum": 0.937,
+    "weight_decay": 0.0005,
+    "cos_lr": true,
+    "workers": 0,
+    "amp": true,
+    "early_stopping": false,
+    "training_time_dev_validation": false
+  },
+  "recovery": {
+    "enabled": true,
+    "save_every_epochs": 5,
+    "resume_after_interruption": true,
+    "recovery_checkpoint_used_for_model_selection": false
+  },
+  "final_checkpoint": {
+    "kind": "FINAL_EPOCH_EMA",
+    "epoch_index": 149,
+    "strict_reload_required": true
+  },
+  "evaluation": {
+    "run_after_all_four_cells": true,
+    "development_split": "phaseb1_dev_manifest.tsv",
+    "official_val_used_for_route_selection": false,
+    "primary_metric": "AP_S_768"
+  },
+  "paths": {
+    "train_manifest": "paper_drafts/原创性攻关/A1_CAP_PhaseB0_data_freeze_20260821/phaseb1_train_manifest.tsv",
+    "dev_manifest": "paper_drafts/原创性攻关/A1_CAP_PhaseB0_data_freeze_20260821/phaseb1_dev_manifest.tsv",
+    "result_root": "runs/_root_cause_audit/B1_CAP_SCREEN_SIMPLE_20260901"
+  }
+}

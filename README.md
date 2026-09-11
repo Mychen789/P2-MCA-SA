@@ -26,9 +26,12 @@ P2-MCA-SA/
 │   ├── train.py
 │   ├── run_p2_sa_ablation.py
 │   ├── eval_size_buckets.py
+│   ├── capacity_screen/       # 2x2 capacity control: runner, evaluator, frozen config
 │   └── ...
 ├── splits/                    # Exact image-stem manifests (4555/250/251)
+│   └── capacity_screen/       # Sequence-disjoint 5149/1322 VisDrone-10 freeze
 ├── results/                   # Derived tables and TAL diagnostic summaries
+│   └── capacity_screen/       # DEV_EVALUATION.json, the source of Table 10
 ├── CITATION.cff
 ├── LICENSE
 └── requirements.txt
@@ -127,6 +130,46 @@ The TAL audit can be enabled with `NMV_TAL_AUDIT=1`; `scripts/audit_tal_checkpoi
 `results/canonical_3seed.csv` contains the per-seed values used for the final four-configuration comparison. `results/canonical_3seed.json` additionally stores means, sample standard deviations, paired tests, and Holm-adjusted p-values. The diagnostic JSON files record P2 and P2+SA TAL assignment summaries at seed 42.
 
 Raw datasets, full prediction archives, TensorBoard logs, and model checkpoints are excluded because of licensing and size. The included manifests, configurations, scripts, and derived result tables are sufficient to reconstruct the documented protocol after obtaining VisDrone.
+
+## The capacity control (manuscript Section 5.3.2)
+
+A P2 head raises feature resolution and also enlarges the model, so a plain
+P2-versus-baseline comparison cannot say which of the two produced a change. The
+2x2 factorial control crosses the stride-4 P2 head (on/off) with C3 neck width
+(96/192), which spends a comparable parameter budget on width instead of on
+resolution.
+
+| cell | P2 | C3 width | params | AP_small |
+|---|---|---:|---:|---:|
+| `C00` | no | 96 | 24,116,254 | 18.24 |
+| `C01` | no | 192 | 25,862,110 | 18.85 |
+| `C10` | yes | 96 | 25,055,336 | 19.89 |
+| `C11` | yes | 192 | 27,134,312 | 20.17 |
+
+The comparison the screen exists for is `C10` against `C01`: the P2 cell carries
+**0.81 M fewer parameters** and still returns **1.04 points more small-object
+AP**. Capacity alone does not account for the small-object behaviour of the P2
+head in this setting.
+
+Three properties make that checkable rather than asserted:
+
+- the split was frozen before any model ran on it, and `freeze_commit.json`
+  records `FROZEN_BEFORE_MODEL_OUTPUT` together with the SHA-256 of each
+  manifest, so the freeze can be verified against the published files;
+- the two parts share **no video sequence** (166 training and 42 development
+  sequences), so no near-duplicate frame of a development image was trained on;
+- the evaluated weights are the final-epoch EMA of each cell, never a checkpoint
+  chosen on development performance, so no model selection occurred.
+
+**One seed.** The screen carries no significance claim, its large-object column
+rests on 386 boxes and is not interpreted, and it runs at its own operating
+point — ten classes at 768 pixels on a partition of the official VisDrone
+training set — so its numbers are not comparable with the three-class tables
+elsewhere in this repository.
+
+Details: `splits/capacity_screen/README.md`, `results/capacity_screen/README.md`,
+and `scripts/capacity_screen/README.md`. The last of these explains why the
+scripts are published unedited and what has to change before they run elsewhere.
 
 ## License
 
