@@ -21,7 +21,7 @@ def main():
     p.add_argument("--data", default=str(ROOT / "configs" / "data" / "nmv_visdrone_3cls.yaml"),
                    help="Dataset YAML. Defaults to NMV-SOD-3cls; use configs/data/visdrone10.yaml for official VisDrone val.")
     p.add_argument("--imgsz", type=int, default=1280,
-                   help="必须与训练分辨率一致!1280 训练的模型若用 960 评估,train/eval 分辨率不匹配会让整张表作废。")
+                   help="must match the training resolution. Evaluating a model trained at 1280 with 960 mismatches train/eval resolution and invalidates the whole table.")
     p.add_argument("--batch", type=int, default=2)
     p.add_argument("--tta", action="store_true", help="Enable Test-Time Augmentation (augment=True)")
     p.add_argument("--soft-nms", action="store_true", help="Enable Soft-NMS via env var")

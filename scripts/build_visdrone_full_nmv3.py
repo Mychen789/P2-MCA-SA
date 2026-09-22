@@ -21,8 +21,8 @@ Class id mapping (VisDrone official -> NMV-SOD-3cls target):
   7  (tricycle)        -> 2 (etrike)
   8  (awning-tricycle) -> 2 (etrike, approximate)
   All others           -> dropped
-(2026-06-10 修正: 旧版误写 6->0, 但 VisDrone 官方类别 6 是 truck、motor 是 10。
- 已用 nmv_visdrone_3cls 主数据集逐框反查确认 10->0 才与主数据集一致。)
+(Corrected 2026-06-10: an earlier version wrongly wrote 6->0, but VisDrone official category 6
+ is truck and motor is 10. Re-checked box by box against the nmv_visdrone_3cls main dataset: only 10->0 agrees with it.)
 
 Usage:
   python scripts/build_visdrone_full_nmv3.py \
@@ -43,7 +43,7 @@ from PIL import Image
 
 VISDRONE_TO_NMV = {
     3: 1,    # bicycle -> bicycle
-    10: 0,   # motor -> ebike  (官方类别 10; 旧版误写 6=truck, 已修)
+    10: 0,   # motor -> ebike  (official category 10; an earlier version wrongly used 6 = truck)
     7: 2,    # tricycle -> etrike
     8: 2,    # awning-tricycle -> etrike
 }
@@ -106,7 +106,7 @@ def main():
                     int(parts[0]), int(parts[1]), int(parts[2]), int(parts[3]),
                     int(parts[4]), int(parts[5]),
                 )
-                if score == 0:  # VisDrone DET: score=0 表示 ignored 标注
+                if score == 0:  # VisDrone DET: score=0 marks an ignored annotation
                     continue
                 if cat not in VISDRONE_TO_NMV:
                     continue

@@ -71,8 +71,8 @@ def install():
 
     def _patched_resume_training(self, ckpt):
         _orig_resume_training(self, ckpt)
-        # post-resume defrag：load_state_dict 把 optimizer/scaler/ema 灌进 GPU
-        # 会留下大量临时副本占着 reserved 块，立即清掉避免 first-batch 撞碎片化现场
+        # post-resume defrag: load_state_dict pushes optimizer/scaler/ema onto the GPU and
+        # leaves temporary copies holding reserved blocks; free them now so the first batch does not land on a fragmented heap
         if torch.cuda.is_available():
             import gc as _gc
             _gc.collect()

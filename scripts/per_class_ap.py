@@ -24,7 +24,7 @@ _EVAL_SUFFIX = re.compile(r"_eval_(test|val)(_\w+)?$")
 
 
 def imgsz_of(run_dir):
-    """权威 imgsz：训练 run 的 args.yaml；回退 `_1280` 名称启发。审计 H4。"""
+    """Authoritative imgsz: args.yaml of the training run; falls back to the `_1280` name heuristic. Audit H4."""
     train = run_dir.parent / _EVAL_SUFFIX.sub("", run_dir.name)
     args = train / "args.yaml"
     if args.exists():
@@ -77,7 +77,7 @@ def main():
         print("No *_eval_test runs found.")
         return
 
-    # csv 带 imgsz 列，按 (分辨率, 名称) 排序
+    # the csv carries an imgsz column and is sorted by (resolution, name)
     rows.sort(key=lambda r: (r[1], r[0]))
     csv = ["name,imgsz," + ",".join(f"AP_{c}" for c in CLASSES)]
     for name, imgsz, per in rows:
@@ -85,7 +85,7 @@ def main():
     (out_dir / "per_class_ap.csv").write_text("\n".join(csv) + "\n", encoding="utf-8")
     print(f"Saved -> {out_dir / 'per_class_ap.csv'}")
 
-    # 每个分辨率单独出图，杜绝 960/1280 混排
+    # one figure per resolution, so 960 and 1280 are never plotted together
     for sz in sorted({r[1] for r in rows}):
         sub = [(n, per) for n, isz, per in rows if isz == sz]
         plot_group(sub, out_dir, sz)

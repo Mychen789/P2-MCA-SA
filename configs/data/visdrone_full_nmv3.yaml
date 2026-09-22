@@ -12,11 +12,11 @@
 #   VisDrone 'awning-tricycle' -> 2 (etrike, approximate)
 #   All other VisDrone classes -> dropped (ignored by the converter)
 #
-# BUILT 2026-06-10 (scripts/build_visdrone_full_nmv3.py, motor 映射 bug 已修 10->0):
-#   composition = VisDrone train 中未进 NMV 的 1916 张 + VisDrone val 中未进 NMV 的 48 张
-#               = 1964 held-out images, 603 NMV-class boxes (大量零目标负样本图, 测 FP 率)。
-#   exclusion list: D:/nmv_visdrone_3cls/nmv_all_stems.txt (5056 stems, train/val/test 全排除)。
-#   论文表述: 同源 held-out 分布鲁棒性评估 (非真·独立跨域), §6 注明局限。
+# BUILT 2026-06-10 (scripts/build_visdrone_full_nmv3.py, motor mapping bug fixed, 10->0):
+#   composition = 1916 VisDrone train images that never entered NMV + 48 VisDrone val images that never entered NMV
+#               = 1964 held-out images, 603 NMV-class boxes (mostly zero-target negatives, so this measures the FP rate).
+#   exclusion list: nmv_all_stems.txt (5056 stems; train/val/test all excluded).
+#   As described in the manuscript: a same-source held-out robustness check, NOT true independent cross-domain
 # Eval:
 #   python scripts/eval_cross_dataset.py --run E16_mca_scale_assign_hi32_1280 \
 #       --data configs/data/visdrone_full_nmv3.yaml --name visdrone_full

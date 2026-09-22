@@ -31,7 +31,7 @@ class _CoordAtt(nn.Module):
 
 
 class MCA(nn.Module):
-    """Multi-branch Cross Attention (本工作新提出).
+    """Multi-branch Cross Attention (introduced in this work).
 
     Fuses EMA (multi-group cross-spatial) with CoordAtt (directional coord-aware)
     via gated concat + learnable weighted sum. Channel-preserving.
@@ -47,12 +47,12 @@ class MCA(nn.Module):
         self.alpha = nn.Parameter(torch.tensor(0.5))
         self.beta = nn.Parameter(torch.tensor(0.5))
         self.fuse = nn.Conv2d(c2, c2, 1, 1, 0)
-        # 组件消融开关 (NMV_MCA_MODE=ema|ca|full)：在同一 yolov8m-p2-mca.yaml 图上隔离
-        # EMA-only / CoordAtt-only / 完整门控融合，反驳"MCA 只是两个注意力堆叠"。默认 full。
+        # Component-ablation switch (NMV_MCA_MODE=ema|ca|full): isolates EMA-only, CoordAtt-only
+        # and the full gated fusion on one yolov8m-p2-mca.yaml graph, answering the objection that MCA is only two attentions stacked. Default full.
         self.mode = os.environ.get("NMV_MCA_MODE", "full").lower()
 
     def forward(self, x):
-        # getattr 兜底：2026-05-28 之前序列化的 best.pt instance 没有 mode 字段。
+        # getattr fallback: best.pt instances serialised before 2026-05-28 carry no mode field.
         mode = getattr(self, "mode", "full")
         if mode == "ema":
             return self.ema(x)

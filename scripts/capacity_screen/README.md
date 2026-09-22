@@ -19,6 +19,14 @@ Reproducing the screen elsewhere means editing those constants. We publish the
 code unedited so that what is shown here is exactly what produced Table 10,
 rather than a cleaned-up version that was never run.
 
+One exception, made on 2026-09-22: the two manifest paths in `b1r_config.json`
+were absolute paths into the working directory of the machine the screen ran on.
+They now name the manifests as published in this repository,
+`splits/capacity_screen/phaseb1_{train,dev}_manifest.tsv`, which are
+byte-identical to the ones that were read — their SHA-256 digests are recorded in
+`../../splits/capacity_screen/dataset_summary.json` and match. Nothing else in
+this directory was touched.
+
 `a1_phaseb1r_numeric.py` additionally verifies the SHA-256 of
 `a1_phaseb0_builder.py` and `a1_phaseb0_data.py` before importing them; if you
 edit those two files, the recorded digests will no longer match and the import

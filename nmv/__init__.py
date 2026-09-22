@@ -3,19 +3,19 @@ import os as _os
 
 import torch as _torch
 
-# 限制 PyTorch GPU 分配上限到物理 VRAM 的安全比例。
-# 在 Windows 8GB GPU 上，PyTorch 默认看到的"上限"是 8GB 物理 + ~8GB Windows
-# "shared GPU memory" (系统 RAM 映射) ≈ 16GB。一旦分配溢出 8GB 物理 VRAM 进入
-# shared 区域，CUDA driver 在某次提交后进入 sticky error state，所有后续 CUDA
-# 调用（包括 empty_cache、.cpu() 拷贝等无害操作）都会立即返回 OOM error，
-# 训练进程必须 abort。
+# Clamp the PyTorch GPU allocator to a safe fraction of physical VRAM.
+# On an 8 GB Windows GPU the ceiling PyTorch sees by default is 8 GB of physical VRAM
+# plus roughly 8 GB of Windows "shared GPU memory" (system RAM mapped in), about 16 GB.
+# Once an allocation spills out of the 8 GB of physical VRAM into that shared region the
+# CUDA driver enters a sticky error state after some submission, and every later CUDA call
+# - empty_cache and .cpu() copies included - returns OOM at once, aborting training.
 #
-# set_per_process_memory_fraction 让 PyTorch allocator 在超限时抛 catchable
-# 的 Python torch.cuda.OutOfMemoryError 异常（而非 driver-level
-# AcceleratorError），TAL 的 CPU 回退路径才能正常工作。
+# set_per_process_memory_fraction makes the allocator raise a catchable Python
+# torch.cuda.OutOfMemoryError when the cap is exceeded, rather than a driver-level
+# AcceleratorError, which is what lets the CPU fallback path in TAL work.
 #
-# 通过 NMV_GPU_LIMIT_GB 环境变量调节（默认 7.0 GB，留 1 GB buffer 给 cuDNN
-# workspace + 驱动）。
+# Tunable through NMV_GPU_LIMIT_GB (default 7.0 GB, leaving 1 GB of headroom for the
+# cuDNN workspace and the driver).
 if _torch.cuda.is_available():
     _props = _torch.cuda.get_device_properties(0)
     _target_gb = float(_os.environ.get("NMV_GPU_LIMIT_GB", "7.0"))

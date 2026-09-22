@@ -4,15 +4,15 @@ Reads:
   runs/E*_eval_test_buckets/metrics.json
 
 Outputs:
-  runs/_summary/size_buckets_bars.png        (论文主图: 11 个实验 × small/medium/large)
-  runs/_summary/size_buckets_bars.pdf        (矢量版本, 便于 LaTeX)
-  runs/_summary/size_buckets.csv             (柱状图底层数据, 论文表格可直接用)
+  runs/_summary/size_buckets_bars.png        (paper figure: 11 experiments x small/medium/large)
+  runs/_summary/size_buckets_bars.pdf        (vector version, for LaTeX)
+  runs/_summary/size_buckets.csv             (the underlying data, usable directly as a paper table)
 
-故事线:
-  - E01 (无 P2) large=0.509, small=0.200  -> small 弱、large 高
-  - E02 (+P2)  large 砸到 0.303,  small 涨到 0.215
-  - 后续 E03-E11 在 P2 基础上加各种模块, large 持续在 0.25-0.30 徘徊
-  - E16_hi32 把 large 救回 0.39 (但仍未追平 baseline 0.509)
+What the figure shows:
+  - E01 (no P2)  large=0.509, small=0.200  -> weak on small objects, strong on large
+  - E02 (+P2)    large drops to 0.303,  small rises to 0.215
+  - E03-E11 add further modules on top of P2; large stays around 0.25-0.30
+  - E16_hi32 brings large back to 0.39 (still short of the 0.509 baseline)
 """
 import json
 from pathlib import Path
@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RUNS = ROOT / "runs"
 OUT = RUNS / "_summary"
 
-# 论文展示顺序：按"baseline → P2 引入 → EMA 支系 → MCA 支系 → CAGFPN/隔离 → scale-aware"组织
+# Display order for the paper: baseline -> P2 introduced -> EMA branch -> MCA branch -> CAGFPN/isolated -> scale-aware
 EXP_ORDER = [
     ("E01_baseline",                "E01 baseline"),
     ("E02_p2",                      "E02 +P2"),
@@ -73,13 +73,13 @@ def main():
     w = 0.27
 
     fig, ax = plt.subplots(figsize=(13, 5.2), dpi=160)
-    # 配色用 colorblind-friendly 三色 (cubehelix-like)
+    # colourblind-friendly three-colour palette (cubehelix-like)
     c_small, c_med, c_large = "#5470c6", "#fac858", "#ee6666"
     bars_s = ax.bar(x - w, small,  w, label="small (area<32²)",  color=c_small)
     bars_m = ax.bar(x,     medium, w, label="medium (32²≤area<96²)", color=c_med)
     bars_l = ax.bar(x + w, large,  w, label="large (area≥96²)",  color=c_large)
 
-    # 标注数值
+    # value labels
     for bars in (bars_s, bars_m, bars_l):
         for b in bars:
             h = b.get_height()
@@ -87,7 +87,7 @@ def main():
                     f"{h:.2f}", ha="center", va="bottom",
                     fontsize=7.5, color="#333")
 
-    # baseline E01 的 large 作为参考线，强调"大目标基线"
+    # the large-object value of baseline E01 as a reference line
     e01_large = small[0]  # default, override below
     for r in rows:
         if r[0] == "E01_baseline":
@@ -95,7 +95,7 @@ def main():
     ax.axhline(e01_large, ls="--", lw=0.9, color="#ee6666", alpha=0.55,
                label=f"E01 large baseline = {e01_large:.3f}")
 
-    # 高亮主模型 x 标签
+    # highlight the x label of the main model
     for i, r in enumerate(rows):
         if r[0] in HIGHLIGHT:
             for bars in (bars_s, bars_m, bars_l):
@@ -119,7 +119,7 @@ def main():
     plt.savefig(png, bbox_inches="tight"); plt.savefig(pdf, bbox_inches="tight")
     print(f"[OK] {png}\n[OK] {pdf}")
 
-    # 输出底层 CSV (论文表格直接可用)
+    # write the underlying CSV (usable directly as a paper table)
     csv = ["name,label,mAP_small,mAP_medium,mAP_large,mAP_50"]
     for key, label, s, m, l, m50 in rows:
         csv.append(f"{key},{label},{s:.4f},{m:.4f},{l:.4f},{m50:.4f}")

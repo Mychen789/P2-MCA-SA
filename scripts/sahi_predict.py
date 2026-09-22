@@ -72,8 +72,8 @@ def main():
     p.add_argument("--slice", type=int, default=640, help="Slice size in pixels")
     p.add_argument("--overlap", type=float, default=0.2, help="Slice overlap ratio (0-1)")
     p.add_argument("--conf", type=float, default=0.01,
-                   help="COCOeval 对 PR 曲线积分,conf 太高(如 0.25)会截断预测、压低 mAP(尤其 mAP_small)数 pp。"
-                        "评估用 0.01(同 COCO 低阈值惯例);只在做可视化时才调高。")
+                   help="COCOeval integrates the PR curve, so too high a conf (0.25, say) truncates predictions and costs several pp of mAP (mAP_small most of all). "
+                        "Use 0.01 for evaluation (the usual low COCO threshold); raise it only for visualisation.")
     p.add_argument("--device", default="cuda:0")
     args = p.parse_args()
 

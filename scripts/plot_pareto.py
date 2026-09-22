@@ -23,8 +23,8 @@ import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# 复杂度与速度的测量分辨率（bench_complexity.py 当前硬编码 960）。
-# 精度散点必须取同一分辨率的 test 子表，否则会把 1280 行误标成 960（审计 H4）。
+# Resolution at which complexity and speed are measured (bench_complexity.py currently hard-codes 960).
+# The accuracy scatter must come from the test sub-table at the same resolution, otherwise 1280 rows
 IMGSZ = 960
 
 HIGHLIGHTS = {"E08_p2_mca", "E11_full_mca_cagfpn"}
@@ -77,12 +77,12 @@ def scatter(ax, x, y, labels, x_label, y_label, title):
 def main():
     summary = ROOT / "runs" / "_summary"
     cx = load_complexity(summary / "complexity.csv")
-    # 取与 complexity 同分辨率的 test 子表（export_table.py 现按 imgsz 分表产出）；
-    # 子表不存在时回退到合并表（旧行为，仅当全仓只有单一分辨率时安全）。
+    # take the test sub-table at the same resolution as the complexity numbers (export_table.py now
+    # emits per-imgsz tables); fall back to the merged table when that sub-table is absent (old
     test_csv = summary / f"comparison_test_{IMGSZ}.csv"
     if not test_csv.exists():
         test_csv = summary / "comparison_test.csv"
-        print(f"[warn] {summary/('comparison_test_%d.csv'%IMGSZ)} 不存在，回退合并表（可能含其它分辨率）")
+        print(f"[warn] {summary/('comparison_test_%d.csv'%IMGSZ)} not found; falling back to the merged table (may contain other resolutions)")
     tt = load_test(test_csv)
     names = [n for n in cx if n in tt]
     if not names:

@@ -1,9 +1,9 @@
 """COCO-style size-bucket mAP (small / medium / large) on any trained run.
 
-Why: ultralytics val.py 默认只给整体 mAP；论文"小目标专项"叙事需要 mAP_small
-量化证据。本脚本走 pycocotools，输出和 sahi_predict.py 同样的指标但不切片。
+Why: ultralytics val.py reports only the overall mAP, while the small-object argument of the
+paper needs quantitative mAP_small evidence. This script goes through pycocotools and emits the
 
-定义 (COCO):
+Definitions (COCO):
   small  : area < 32^2 = 1024 px^2
   medium : 32^2 <= area < 96^2
   large  : area >= 96^2
@@ -16,7 +16,7 @@ Output:
   runs/<run>_eval_test_buckets/
     gt_coco.json
     predictions_coco.json
-    metrics.json        含 mAP_small / mAP_medium / mAP_large / mAP_50 / ...
+    metrics.json        holds mAP_small / mAP_medium / mAP_large / mAP_50 / ...
 """
 import argparse
 import json
@@ -90,9 +90,9 @@ def main():
                    help="Dataset YAML. Defaults to NMV-SOD-3cls; use configs/data/visdrone10.yaml for official VisDrone val.")
     p.add_argument("--imgsz", type=int, default=960)
     p.add_argument("--conf", type=float, default=0.001,
-                   help="低 conf 阈值才能让 pycocotools 的 PR 曲线完整 (默认 0.001 同 COCO 评估惯例)")
+                   help="a low confidence threshold is what lets pycocotools trace the full PR curve (default 0.001, the usual COCO evaluation setting)")
     p.add_argument("--iou", type=float, default=0.7,
-                   help="NMS IoU (ultralytics 默认 0.7)")
+                   help="NMS IoU (ultralytics default 0.7)")
     args = p.parse_args()
 
     bp = ROOT / "runs" / args.run / "weights" / "best.pt"
@@ -182,7 +182,7 @@ def main():
     print(f"\n[OK] -> {out_dir / 'metrics.json'}")
     print(f"  mAP@0.5:0.95 = {metrics['mAP_50_95']:.4f}")
     print(f"  mAP@0.5      = {metrics['mAP_50']:.4f}")
-    print(f"  mAP small    = {metrics['mAP_small']:.4f}   <- 论文小目标关键数字")
+    print(f"  mAP small    = {metrics['mAP_small']:.4f}   <- the small-object figure reported in the paper")
     print(f"  mAP medium   = {metrics['mAP_medium']:.4f}")
     print(f"  mAP large    = {metrics['mAP_large']:.4f}")
 

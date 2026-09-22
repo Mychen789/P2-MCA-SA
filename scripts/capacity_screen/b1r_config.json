@@ -1,7 +1,12 @@
 {
   "schema": "B1R_PAPER_EXPERIMENT_CONFIG_V1",
   "experiment": "A1_CAPACITY_2X2_FACTORIAL_SCREEN",
-  "cell_order": ["C10", "C11", "C01", "C00"],
+  "cell_order": [
+    "C10",
+    "C11",
+    "C01",
+    "C00"
+  ],
   "train": {
     "seed": 42,
     "imgsz": 768,
@@ -36,8 +41,8 @@
     "primary_metric": "AP_S_768"
   },
   "paths": {
-    "train_manifest": "paper_drafts/原创性攻关/A1_CAP_PhaseB0_data_freeze_20260821/phaseb1_train_manifest.tsv",
-    "dev_manifest": "paper_drafts/原创性攻关/A1_CAP_PhaseB0_data_freeze_20260821/phaseb1_dev_manifest.tsv",
+    "train_manifest": "splits/capacity_screen/phaseb1_train_manifest.tsv",
+    "dev_manifest": "splits/capacity_screen/phaseb1_dev_manifest.tsv",
     "result_root": "runs/_root_cause_audit/B1_CAP_SCREEN_SIMPLE_20260901"
   }
 }

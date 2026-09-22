@@ -2,21 +2,21 @@
 auto-evaluate each new run on the test split.
 
 Why this exists:
-  - 北大核心审稿人对单 seed 结果普遍不接受。
-  - 原 seed=42 已经训过 (runs/E01_baseline, E08_p2_mca, E11_full_mca_cagfpn)；
-    本脚本补充 seed=1,7,123,2026，4 个新种子 × 3 实验 = 12 次训练，
-    在 RTX 5060 / imgsz=960 / batch=4 下每次 ~15h，合计 ~7.5 天连续。
-  - 每次训练完成立即跑 test 评估，避免训完才发现需要补 eval。
+  - Single-seed results are generally not accepted by reviewers.
+  - seed=42 has already been trained (runs/E01_baseline, E08_p2_mca, E11_full_mca_cagfpn);
+    this script adds seeds 1, 7, 123 and 2026 - 4 new seeds x 3 experiments = 12 runs,
+    about 15 h each on an RTX 5060 at imgsz=960 / batch=4, roughly 7.5 days back to back.
+  - Each run is evaluated on test immediately after training, so no run finishes only to need a later eval.
 
 Usage:
   cd P2-MCA-SA
-  python scripts/run_multi_seed.py                 # 跑全部 12 个 (训 + 评)
-  python scripts/run_multi_seed.py --only-seed 1   # 只跑 seed=1 的 3 个
-  python scripts/run_multi_seed.py --only-exp 8    # 只跑 E08 的 4 个 seed
-  python scripts/run_multi_seed.py --skip-eval     # 只训不评 (eval 留到后面批量做)
+  python scripts/run_multi_seed.py                 # run all 12 (train + eval)
+  python scripts/run_multi_seed.py --only-seed 1   # only the 3 runs with seed=1
+  python scripts/run_multi_seed.py --only-exp 8    # only the 4 seeds of E08
+  python scripts/run_multi_seed.py --skip-eval     # train only (evaluate later in a batch)
 
 After completion run:
-  python scripts/aggregate_seeds.py    # 聚合 mean ± std
+  python scripts/aggregate_seeds.py    # aggregate mean +/- std
 """
 import argparse
 import os
@@ -29,9 +29,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PY = sys.executable
 
-# 论文优化版 (imgsz=1280)。headline 双模型只补 2 个 seed (42 已由 run_paper 跑),
-# 共报告 3 seed 的 mean ± std；E11/CAGFPN 已退出主线(掉 mAP50-95)故不再跑。
-# 推荐用 scripts/run_paper.py 统一驱动全队列;本脚本作为单独补 seed 的备用入口。
+# Paper configuration (imgsz=1280). The two headline models need only 2 extra seeds (42 already
+# came from run_paper), for 3 seeds of mean +/- std in total; E11/CAGFPN left the main line (it lost mAP50-95).
+# scripts/run_paper.py drives the whole queue; this script is the standalone entry for topping up seeds.
 SEEDS = [1, 7]
 EXPS = [
     (1, "E01_baseline"),
@@ -40,7 +40,7 @@ EXPS = [
 
 
 def run_train(idx, name, seed):
-    suffix = f"_1280_s{seed}"  # 与 run_paper.py / aggregate_seeds.py 的 1280 命名一致
+    suffix = f"_1280_s{seed}"  # matches the 1280 naming of run_paper.py / aggregate_seeds.py
     print(f"\n{'#' * 78}")
     print(f"#  TRAIN  {name}{suffix}   seed={seed}   started {datetime.now()}")
     print(f"{'#' * 78}")
@@ -56,7 +56,7 @@ def run_train(idx, name, seed):
 
 
 def run_eval(name, seed):
-    suffix = f"_1280_s{seed}"  # 与 run_paper.py / aggregate_seeds.py 的 1280 命名一致
+    suffix = f"_1280_s{seed}"  # matches the 1280 naming of run_paper.py / aggregate_seeds.py
     run_dir_name = name + suffix
     bp = ROOT / "runs" / run_dir_name / "weights" / "best.pt"
     if not bp.exists():
@@ -64,7 +64,7 @@ def run_eval(name, seed):
         return False
     print(f"\n--- EVAL  {run_dir_name}  on test split ---")
     cmd = [PY, str(ROOT / "scripts" / "val.py"), "--run", run_dir_name,
-           "--split", "test", "--imgsz", "1280"]  # 必须 1280 评估,与训练分辨率一致
+           "--split", "test", "--imgsz", "1280"]  # must evaluate at 1280, matching the training resolution
     rc = subprocess.run(cmd).returncode
     return rc == 0
 
@@ -90,7 +90,7 @@ def main():
     for s in seeds:
         for idx, name in exps:
             print(f"  - {name}_s{s}")
-    print(f"\nEstimated wallclock: ~{total * 56}h ≈ {total * 56 / 24:.1f} days (imgsz=1280, batch=2, 实测 ~56h/run)")
+    print(f"\nEstimated wallclock: ~{total * 56}h = {total * 56 / 24:.1f} days (imgsz=1280, batch=2, measured ~56h/run)")
     print(f"Started at {datetime.now()}\n")
 
     t_global = datetime.now()
