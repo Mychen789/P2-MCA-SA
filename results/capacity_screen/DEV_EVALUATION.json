@@ -1,8 +1,8 @@
 {
  "schema": "A1_PHASEB1R_DEV_EVALUATION_V1",
  "experiment": "A1_CAPACITY_2X2_FACTORIAL_SCREEN",
- "result_root": "D:\\机器视觉\\机器视觉\\nmv-sod-yolo\\runs\\_root_cause_audit\\B1_CAP_SCREEN_SIMPLE_20260901",
- "dev_manifest": "D:\\机器视觉\\机器视觉\\nmv-sod-yolo\\paper_drafts\\原创性攻关\\A1_CAP_PhaseB0_data_freeze_20260821\\phaseb1_dev_manifest.tsv",
+ "result_root": "runs/_root_cause_audit/B1_CAP_SCREEN_SIMPLE_20260901",
+ "dev_manifest": "splits/capacity_screen/phaseb1_dev_manifest.tsv",
  "dev_images": 1322,
  "dev_boxes": 74642,
  "dev_bucket_counts_768": {

@@ -1,6 +1,6 @@
 # P2-MCA-SA
 
-Official reproducibility package for the manuscript **“Cross-scale trade-offs and assignment diagnosis of the P2 detection head in UAV small-object detection.”**
+Official reproducibility package for the manuscript **“Candidate eligibility is not supervision: diagnosing the large-object cost of the P2 detection head in UAV small-object detection.”**
 
 The repository studies three components in a controlled YOLO setting:
 
@@ -44,7 +44,9 @@ The repository does **not** redistribute VisDrone images or annotations, trained
 Python 3.9 or newer is recommended. Install a PyTorch build compatible with your CUDA version first, then install the remaining dependencies:
 
 ```bash
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+# RTX 50xx (Blackwell) - the GPU used for the reported runs
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+# RTX 30xx/40xx: substitute cu121
 pip install -r requirements.txt
 python scripts/sanity_check.py
 ```

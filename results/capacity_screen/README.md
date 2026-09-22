@@ -49,6 +49,15 @@ account for the small-object behaviour of the P2 head in this setting.
 - **The large-object column is noise-prone.** It rests on 386 boxes, 0.5% of the
   split, and the numerically largest entries of the contrast table sit in it.
 
+## A note on the paths in the JSON
+
+The `result_root` and `dev_manifest` fields were rewritten on 2026-09-22 to
+drop the absolute paths of the machine the screen ran on. `dev_manifest` now
+points at the published manifest in this repository, which is byte-identical
+to the one that was evaluated: its SHA-256 is recorded in
+`../../splits/capacity_screen/dataset_summary.json`. No metric, parameter count
+or checkpoint hash was touched.
+
 ## Settings recorded in the JSON
 
 - `imgsz`: `768`
