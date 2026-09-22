@@ -1,4 +1,4 @@
-path: D:/机器视觉/机器视觉/datasets/nmv_visdrone_3cls
+path: datasets/nmv_visdrone_3cls
 train: images/train
 val: images/val
 test: images/test
