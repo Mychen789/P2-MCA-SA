@@ -9,6 +9,7 @@ This directory contains compact, derived outputs used to support the manuscript.
 - `cross_dataset_eval.csv`: same-source held-out evaluation summaries.
 - `diagnostics/p2_tal_seed42.json`: TAL audit for P2 without SA.
 - `diagnostics/p2_sa_tal_seed42.json`: matched TAL audit with SA (`HI_RATIO=32`).
+- `diagnostics/baseline_tal_seed42.json`: matched TAL audit of the P2-free baseline, the reference for where supervision lands before P2 is added.
 
 AP values in the canonical files are percentages. Standard deviations are sample standard deviations across seeds 42, 1, and 7.
 
