@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "updated_utc": "2026-09-23T09:16:37.080216+00:00",
+  "settings": {
+    "scale_assign_enabled": false,
+    "hi_ratio": 32.0,
+    "lo_ratio": 0.0,
+    "size_definition": "COCO area bins in the current training-input pixel coordinates: small < 32^2, medium < 96^2, large >= 96^2",
+    "training_grad_context_only": true,
+    "matrix_columns": [
+      "stride_8",
+      "stride_16",
+      "stride_32"
+    ]
+  },
+  "assignment_calls": 1139,
+  "gt_occurrences": {
+    "small": 67137,
+    "medium": 7008,
+    "large": 114
+  },
+  "fallback_gt": 0,
+  "counts": {
+    "candidate_before_sa": {
+      "small": {
+        "stride_8": 306235.0,
+        "stride_16": 77866.0,
+        "stride_32": 18980.0
+      },
+      "medium": {
+        "stride_8": 232442.0,
+        "stride_16": 58157.0,
+        "stride_32": 14585.0
+      },
+      "large": {
+        "stride_8": 23890.0,
+        "stride_16": 6028.0,
+        "stride_32": 1477.0
+      }
+    },
+    "candidate_after_sa": {
+      "small": {
+        "stride_8": 306235.0,
+        "stride_16": 77866.0,
+        "stride_32": 18980.0
+      },
+      "medium": {
+        "stride_8": 232442.0,
+        "stride_16": 58157.0,
+        "stride_32": 14585.0
+      },
+      "large": {
+        "stride_8": 23890.0,
+        "stride_16": 6028.0,
+        "stride_32": 1477.0
+      }
+    },
+    "positive_after_topk": {
+      "small": {
+        "stride_8": 254490.0,
+        "stride_16": 62566.0,
+        "stride_32": 11413.0
+      },
+      "medium": {
+        "stride_8": 55215.0,
+        "stride_16": 14757.0,
+        "stride_32": 100.0
+      },
+      "large": {
+        "stride_8": 1.0,
+        "stride_16": 1123.0,
+        "stride_32": 16.0
+      }
+    }
+  },
+  "derived": {
+    "positive_per_gt": {
+      "small": {
+        "stride_8": 3.790607265740203,
+        "stride_16": 0.9319153372953811,
+        "stride_32": 0.16999568047425415
+      },
+      "medium": {
+        "stride_8": 7.878852739726027,
+        "stride_16": 2.105736301369863,
+        "stride_32": 0.014269406392694063
+      },
+      "large": {
+        "stride_8": 0.008771929824561403,
+        "stride_16": 9.850877192982455,
+        "stride_32": 0.14035087719298245
+      }
+    },
+    "positive_level_fraction": {
+      "small": {
+        "stride_8": 0.7747763107020754,
+        "stride_16": 0.19047764020348953,
+        "stride_32": 0.03474604909443509
+      },
+      "medium": {
+        "stride_8": 0.787975225482361,
+        "stride_16": 0.21059767096700538,
+        "stride_32": 0.001427103550633634
+      },
+      "large": {
+        "stride_8": 0.0008771929824561404,
+        "stride_16": 0.9850877192982456,
+        "stride_32": 0.014035087719298246
+      }
+    },
+    "mean_alignment_score_of_positives": {
+      "small": {
+        "stride_8": 0.1306217760659186,
+        "stride_16": 0.10963312195446609,
+        "stride_32": 0.007595845205928194
+      },
+      "medium": {
+        "stride_8": 0.28267110278400664,
+        "stride_16": 0.24789245987581499,
+        "stride_32": 0.0004948991537094117
+      },
+      "large": {
+        "stride_8": 1.52587890625e-05,
+        "stride_16": 0.28554106692809245,
+        "stride_32": 0.03943275287747383
+      }
+    },
+    "mean_iou_of_positives": {
+      "small": {
+        "stride_8": 0.6566770182521906,
+        "stride_16": 0.6334578185436179,
+        "stride_32": 0.44686861304765535
+      },
+      "medium": {
+        "stride_8": 0.8143920356787105,
+        "stride_16": 0.7930073969133292,
+        "stride_32": 0.38560024261474607
+      },
+      "large": {
+        "stride_8": 0.323974609375,
+        "stride_16": 0.7864954363312555,
+        "stride_32": 0.5978851318359375
+      }
+    }
+  }
+}
